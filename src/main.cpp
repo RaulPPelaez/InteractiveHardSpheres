@@ -1,5 +1,4 @@
 
-
 #include "common.h"
 #include"Simulation.h"
 #include "Visualization.h"
@@ -8,25 +7,30 @@
 #include <string>
 
 void printControls();
+
 void addEvents(hs::Visualization &vis, hs::Simulation &simulation);
+
 bool pause = false;
+
 struct FrameCounter{
   int framesSinceLastCheck = 0;
   int initialTicks;
+  
   FrameCounter(){
     reset();
   }
+  
   void reset(){
     framesSinceLastCheck = 0;
     initialTicks = SDL_GetTicks();
   }
+  
   void registerFrame(){
     framesSinceLastCheck++;    
   }
 
   float getAverageFPS(){
     float fps = std::min(10000.0f, framesSinceLastCheck/((SDL_GetTicks() - initialTicks) / 1000.f));
-    
     return fps;
   }
   
@@ -55,17 +59,17 @@ int main(){
     frameCounter.registerFrame();
     if((SDL_GetTicks()-start)/1000.0f > 1){
       start = SDL_GetTicks();
-      vis.setWindowTitle("Hard Spheres - FPS: " + std::to_string(int(fps+0.5)));
+      vis.setWindowTitle("Hard Spheres - FPS: " + std::to_string(int(fps+0.5)) +
+			 " - Particle updates per frame: " + std::to_string(updatesPerDisplay));
     }
   }
-
   return 0;
 }
 
 void printControls(){
   hs::log<hs::MESSAGE>("LIST OF CONTROLS:");
-  hs::log<hs::MESSAGE>("n: Try to add a particle at a rantom location");
-  hs::log<hs::MESSAGE>("N: Try to add 10 particles at a rantom location");
+  hs::log<hs::MESSAGE>("n: Try to add a particle at a random location");
+  hs::log<hs::MESSAGE>("N: Try to add 10 particles at a random location");
   hs::log<hs::MESSAGE>("l: Reduce box size");
   hs::log<hs::MESSAGE>("L: Increase box size");
   hs::log<hs::MESSAGE>("p: Print simulation information");

@@ -10,10 +10,10 @@
 #include <algorithm>
 #include<iostream>
 namespace hs{
-
-  
+ 
   struct Grid{
     int2 size;
+    
     int2 getCell(real2 pos, Box box){
       int n = int( (0.5 + pos.x/box.lx)*size.x);
       int m = int( (0.5 + pos.y/box.ly)*size.y);
@@ -126,6 +126,7 @@ namespace hs{
     real jumpSize;
     real currentAcceptanceRatio = 0;
     const real targetRatio = 0.4;
+    
     void adjustJumpSize(){
       float ratio = naccept/ (float)ntry;
       constexpr float updateRate = 1.01;
@@ -138,27 +139,32 @@ namespace hs{
 	jumpSize/=updateRate;
       }
       if(jumpSize<0.005)jumpSize = 1;
-      ntry = naccept =0;
+      ntry = naccept = 0;
       currentAcceptanceRatio = ratio;
     }
+    
   public:
+    
     Optimize(){
       naccept = 0;
       ntry = 0;
-      ncontrol = 1000;
+      ncontrol = 3000;
       jumpSize = 1;
     }
+    
     void registerAccept(){
       naccept++;
       ntry++;
       if(ntry%ncontrol == 0)
 	adjustJumpSize();
     }
+    
     void registerReject(){
       ntry++;
       if(ntry%ncontrol == 0)
 	adjustJumpSize();
     }
+    
     real getJumpSize(){
       return jumpSize;
     }
@@ -183,7 +189,7 @@ namespace hs{
 
     Simulation(){
       auto secondsSinceEpoch = std::chrono::system_clock::now().time_since_epoch().count();
-      auto seed = 0xbada55d00d;//^secondsSinceEpoch;
+      auto seed = 0xbada55d00d^secondsSinceEpoch;
       generator = Engine(seed);      
       initializeParameters();
       initializeParticles();

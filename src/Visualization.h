@@ -20,13 +20,15 @@ namespace hs{
     SDL_Renderer* renderer;  
   public:
     Window(WindowSize ws):ws(ws){
-      log<MESSAGE>("Initializing SDL");
-      int st= SDL_Init(SDL_INIT_VIDEO);
-      if(st<0)   log<CRITICAL>("SDL Could not initialize with error code: %d message: %s", st, SDL_GetError());
+      int st = SDL_Init(SDL_INIT_VIDEO);
+      if(st<0)
+	log<CRITICAL>("SDL Could not initialize with error code: %d message: %s", st, SDL_GetError());
       window = SDL_CreateWindow("Hard Spheres", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ws.fw, ws.fh, 0);
-      if(!window)   log<CRITICAL>("SDL Could not open a window with error %s", SDL_GetError());
+      if(!window)
+	log<CRITICAL>("SDL Could not open a window with error %s", SDL_GetError());
       renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-      if(!renderer)   log<CRITICAL>("SDL Could not create a renderer with error %s", SDL_GetError());
+      if(!renderer)
+	log<CRITICAL>("SDL Could not create a renderer with error %s", SDL_GetError());
     }
 
     void clear(Color color){
@@ -61,7 +63,8 @@ namespace hs{
   class ParticleRenderer{
     std::shared_ptr<Window> w;
   public:
-    ParticleRenderer(std::shared_ptr<Window> w):w(w){ };
+    
+    ParticleRenderer(std::shared_ptr<Window> w):w(w){};
 
     void renderParticles(ParticleList list, Box box){
       auto renderer = w->getRenderer();
@@ -89,10 +92,10 @@ namespace hs{
 
       }
     }
- 
   };
 
   static bool quit = false;
+  
   void signalQuit(){
     quit = true;
   }
@@ -105,7 +108,6 @@ namespace hs{
 
   public:
     HandleEvents(){
-
       addEvent([](Event &e){
 	if (e.type == SDL_QUIT) {
 	  signalQuit();
